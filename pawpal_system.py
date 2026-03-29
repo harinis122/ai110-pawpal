@@ -10,7 +10,6 @@ class Task:
     due_time: datetime
     priority: int # 1 = High, 2 = Medium, 3 = Low
     is_completed: bool = False
-    frequency: int = 0  # Frequency in days for recurring tasks (0 means non-recurring)
 
     def mark_as_completed(self):
         """Mark this task as completed."""
@@ -42,6 +41,13 @@ class Owner:
     pets: List[Pet]
     available_hours: int
 
+    def get_all_tasks(self) -> List[Task]:
+        """Return all tasks from all pets owned by this owner."""
+        all_tasks = []
+        for pet in self.pets:
+            all_tasks += pet.get_tasks()
+        return all_tasks
+
     def add_pet(self, pet: Pet):
         """Add a pet to the owner's list of pets."""
         self.pets.append(pet)
@@ -71,7 +77,9 @@ class Scheduler:
             return sorted(pending_tasks, key=lambda task: task.due_time)
         else:
             # If not all tasks can be completed, get optimized tasks by priority
-            return self.get_optimized_tasks_by_priority()
+            optimized_tasks = self.get_optimized_tasks_by_priority()
+            return sorted(optimized_tasks, key=lambda task: task.due_time)
+
 
     def all_tasks_can_be_completed(self) -> bool:
         """

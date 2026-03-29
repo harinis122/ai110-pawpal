@@ -8,9 +8,9 @@ class Task:
     description: str
     duration: int
     due_time: datetime
-    priority: str
+    priority: int
     completion_status: bool
-    frequency: str
+    frequency: int
 
     def mark_as_completed(self):
         self.completion_status = True
@@ -24,9 +24,11 @@ class Pet:
 
     def add_task(self, task: Task):
         self.tasks.append(task)
+        # also add to scheduler if needed
 
     def remove_task(self, task: Task):
         self.tasks.remove(task)
+        # also remove from scheduler if needed
 
     def get_tasks(self) -> List[Task]:
         return self.tasks
@@ -49,7 +51,7 @@ class Owner:
 
 @dataclass
 class Scheduler:
-    tasks: List[Task]
+    all_tasks: List[Task]
     owner: Owner
 
     def get_schedule(self):
@@ -62,4 +64,7 @@ class Scheduler:
 
     def optimize_tasks_by_priority(self):
         # TODO: Implement optimization logic
+        pass
+
+    def handle_recurring_tasks(self):
         pass

@@ -5,11 +5,19 @@
 **a. Initial design**
 Three core actions: enter pet and task information, see detailed daily schedule based on inputted constraints, see reasoning behind the plan/schedule.
 
+Initial UML design:
+Owner class with attributes (name, pets), methods (add_pet, remove_pet, get_pets)
+Pet class with attributes (breed, name, tasks), methods (add_task, remove_task, get_tasks)
+Task class with attributes (description, duration, due_time, priority, completion_status, frequency), methods (mark_as_completed)
+Scheduler class with attributes (tasks, owner), methods (get_schedule, check_if_all_tasks_can_be_completed, optimize_tasks_by_priority)
 
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
+owner --has--> pet(s)
+pet --has--> task(s)
+scheduler --manages--> task(s)
+scheduler --uses--> task(s)
 
 **b. Design changes**
+Yes, my design changed during implementation. Based on AI feedback, I adjusted my skeleton of Scheduler by adding a method to account for recurring tasks. I also added comments to emphasize that Scheduler tasks need to be changed every time pet tasks get added/deleted.
 
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.

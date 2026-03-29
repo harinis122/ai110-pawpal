@@ -41,3 +41,8 @@ pip install -r requirements.txt
 5. Add tests to verify key behaviors.
 6. Connect your logic to the Streamlit UI in `app.py`.
 7. Refine UML so it matches what you actually built.
+
+### Smarter Scheduling
+1. if owner time is limited, scheduling is optimized by priority level first and then due time
+2. any conflicting due times will be automatically resolved by priority level
+3. only pending tasks are included in the schedule

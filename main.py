@@ -1,7 +1,7 @@
 from datetime import datetime
 from pawpal_system import Task, Pet, Owner, Scheduler
 
-def format_schedule(schedule: list, owner: Owner) -> str:
+def format_schedule(schedule: list, all_tasks_can_be_completed: bool, owner: Owner) -> str:
     """Format the schedule in a clear, readable way for terminal output."""
     if not schedule:
         return "📅 No tasks scheduled for today!"
@@ -44,6 +44,15 @@ def format_schedule(schedule: list, owner: Owner) -> str:
     output.append(f"   Pending: {total_tasks - completed_tasks}")
     output.append(f"   Total Time: {total_duration} minutes ({total_duration//60}h {total_duration%60}m)")
 
+    # Check for tasks with the same due time
+    due_times = [task.due_time for task in schedule]
+    if len(due_times) != len(set(due_times)):
+        output.append("\nNote: Multiple tasks have the same due time and have been optimized by priority level.")
+
+    # Print warning if schedule exceeds available hours
+    if not all_tasks_can_be_completed:
+        output.append("\nNote: All tasks cannot be completed within available hours. Schedule has been optimized by priority and due time to fit available hours:")
+
     return "\n".join(output)
 
 def create_schedule():
@@ -58,8 +67,8 @@ def create_schedule():
 
 
     # Create a pet and add tasks to it
-    buddy = Pet(breed="Golden Retriever", name="Buddy", tasks=[task1, task5, task6, task7])
-    whiskers = Pet(breed="Siamese Cat", name="Whiskers", tasks=[task2, task3, task4])
+    buddy = Pet(breed="Golden Retriever", name="Buddy", tasks=[task6, task7, task1, task5])
+    whiskers = Pet(breed="Siamese Cat", name="Whiskers", tasks=[task3, task2, task4])
 
     # Create an owner and add pets to it
     alice = Owner(name="Alice", pets=[buddy, whiskers], available_hours=4)
@@ -69,8 +78,10 @@ def create_schedule():
     schedule = scheduler.get_schedule()
 
     # Print the formatted schedule
-    formatted_schedule = format_schedule(schedule, alice)
+    formatted_schedule = format_schedule(schedule, scheduler.all_tasks_can_be_completed(), alice)
     print(formatted_schedule)
+
+
 
 if __name__ == "__main__":
     create_schedule()

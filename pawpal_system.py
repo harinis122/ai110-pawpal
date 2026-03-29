@@ -129,6 +129,24 @@ class Scheduler:
         """Return all low priority (priority=3) tasks."""
         return [task for task in self.all_tasks if task.priority == 3]
 
+    def get_scheduled_tasks_by_pet_name(self, pet_name: str) -> List[Task]:
+        """Return only the tasks for a specific pet that would be included in the schedule (considering time constraints)."""
+        # Get the actual scheduled tasks (which may exclude some due to time constraints)
+        scheduled_tasks = self.get_schedule()
+        
+        # Find the pet with the given name
+        target_pet = None
+        for pet in self.owner.pets:
+            if pet.name == pet_name:
+                target_pet = pet
+                break
+        
+        if target_pet is None:
+            return []  # No pet found with that name
+        
+        # Return only scheduled tasks that belong to this pet
+        return [task for task in scheduled_tasks if task in target_pet.tasks]
+
     def update_all_tasks(self) -> None:
         """Sync all_tasks list with current owner's tasks."""
         self.all_tasks = self.owner.get_all_tasks()

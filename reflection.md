@@ -27,14 +27,10 @@ Yes, my design changed during implementation. Based on AI feedback, I adjusted m
 ## 2. Scheduling Logic and Tradeoffs
 
 **a. Constraints and priorities**
-
-- What constraints does your scheduler consider (for example: time, priority, preferences)?
-- How did you decide which constraints mattered most?
+My scheduler first considers owner preferences (how much time in the day they have to care for their pets), then priority, then due time for a task. I decided to proceed with this order because there is no point in scheduling tasks if the owner has no time for it, and because it is better to prioritize higher priority tasks over low priority tasks due earlier.
 
 **b. Tradeoffs**
-
-- Describe one tradeoff your scheduler makes.
-- Why is that tradeoff reasonable for this scenario?
+One tradeoff my scheduler makes is removing some tasks if the given tasks' combined time exceeds the owner's available amount of hours per day. My program removes only low-priority tasks with latest due times as much as possible. This is to ensure that owners can optimize the time they have available as much as possible.
 
 ---
 

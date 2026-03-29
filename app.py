@@ -1,3 +1,9 @@
+# input available hours
+# input due time for each task
+# filter by pet name
+# error message if schedule exceeds available hours, then optimize by priority and due time to fit available hours
+
+
 import streamlit as st
 from datetime import datetime
 from pawpal_system import Owner, Pet, Task, Scheduler

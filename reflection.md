@@ -3,6 +3,8 @@
 ## 1. System Design
 
 **a. Initial design**
+Three core actions: enter pet and task information, see detailed daily schedule based on inputted constraints, see reasoning behind the plan/schedule.
+
 
 - Briefly describe your initial UML design.
 - What classes did you include, and what responsibilities did you assign to each?

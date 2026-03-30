@@ -37,41 +37,34 @@ One tradeoff my scheduler makes is removing some tasks if the given tasks' combi
 ## 3. AI Collaboration
 
 **a. How you used AI**
+I used GitHub copilot during this project to generate base code, writing tests, and a bit for debugging when test cases were failing. The most helpful prompts were ones that directed the AI to generate code, as I felt that once I had AI-generated code, I could work to optimize it.
 
-- How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
-- What kinds of prompts or questions were most helpful?
 
 **b. Judgment and verification**
+I did not accept AI suggestions to include additional, unnecessary methods in classes such as including a "get_tasks_by_pet_name" method in Scheduler. I evaluated what the AI suggested by thinking about whether a method was needed or not before accepting it. Even if the method seemed correctly implemented, I thought twice before accepting any AI generated code to see if it is really needed.
 
-- Describe one moment where you did not accept an AI suggestion as-is.
-- How did you evaluate or verify what the AI suggested?
 
 ---
 
 ## 4. Testing and Verification
 
 **a. What you tested**
+I tested task completion toggling and that adding a task raises a pet’s task count, schedule output ordering by due time and priority, time-capacity behavior, multi-pet scheduling, pet-specific task filtering, and duplicate-time warning text in formatted UI output. These tests were important to ensure that the program works well not only under basic condiitons but also under edge cases.
 
-- What behaviors did you test?
-- Why were these tests important?
 
 **b. Confidence**
-
-- How confident are you that your scheduler works correctly?
-- What edge cases would you test next if you had more time?
+I think that I am pretty confident that my tests are comprehensive, but if I had more time I would add comprehensive test cases to ensure that the program does not break with large amounts of tasks.
 
 ---
 
 ## 5. Reflection
 
 **a. What went well**
-
-- What part of this project are you most satisfied with?
+I am most satisfied that I was able to use AI to efficiently create this program, and direct the AI rather than relying on it. I successfully evaluated whether or not to use AI generated code.
 
 **b. What you would improve**
-
-- If you had another iteration, what would you improve or redesign?
+I would probably split the Scheduler class into Schedule and Scheduler classes because I feel that Scheduler currently has too many responsibilities which would be better off delegated to a helper class.
 
 **c. Key takeaway**
+I learned that having a sense of system design before starting coding is important, especially when coding with AI, to ensure that you have a sense of what direction you're headed in. This will ensure that you know exactly what you're looking for when deciding whether to accept AI generated code. Without knowing the systen design, you might accept AI generated code which does not have the correct system design, leading to a long-term weak system.
 
-- What is one important thing you learned about designing systems or working with AI on this project?

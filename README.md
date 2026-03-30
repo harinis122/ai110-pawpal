@@ -47,7 +47,14 @@ pip install -r requirements.txt
 2. any conflicting due times will be automatically resolved by priority level
 3. only pending tasks are included in the schedule
 
+Features: Priority-aware scheduling, Chronological sort with tiebreak, Capacity check, Time conflict detection / warning, Task completion filtering, Owner/pet task aggregation, Pet-specific filtering, Due-time input and parsing
+
+
 ### Testing PawPal+
 testing command: python -m pytest
 coverage: These tests check task completion toggling and that adding a task raises a pet’s task count. It verifies schedule output ordering by due time and priority (including identical timestamps) and that completed tasks are excluded. It tests time-capacity behavior (all tasks fit vs prioritized reduction when over capacity) and multi-pet scheduling. It validates pet-specific task filtering and duplicate-time warning text in formatted UI output.
 confidence level: 5 stars
+
+### Demo
+![alt text](image.png)
+

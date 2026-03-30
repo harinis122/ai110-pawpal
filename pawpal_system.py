@@ -74,11 +74,11 @@ class Scheduler:
         
         if self.all_tasks_can_be_completed():
             # If all tasks can be completed, sort by due time
-            return sorted(pending_tasks, key=lambda task: task.due_time)
+            return sorted(pending_tasks, key=lambda task: (task.due_time, task.priority))
         else:
             # If not all tasks can be completed, get optimized tasks by priority
             optimized_tasks = self.get_optimized_tasks_by_priority()
-            return sorted(optimized_tasks, key=lambda task: task.due_time)
+            return sorted(optimized_tasks, key=lambda task: (task.due_time, task.priority))
 
 
     def all_tasks_can_be_completed(self) -> bool:
@@ -119,7 +119,7 @@ class Scheduler:
 
     def get_high_priority_tasks(self) -> List[Task]:
         """Return all high priority (priority=1) tasks."""
-        return [task for task in self.all_tasks if task.priority == 1]
+        return [task for task in self.all_tasks if task.priority == 3]
     
     def get_medium_priority_tasks(self) -> List[Task]:
         """Return all medium priority (priority=2) tasks."""
@@ -127,7 +127,7 @@ class Scheduler:
     
     def get_low_priority_tasks(self) -> List[Task]:
         """Return all low priority (priority=3) tasks."""
-        return [task for task in self.all_tasks if task.priority == 3]
+        return [task for task in self.all_tasks if task.priority == 1]
 
     def get_scheduled_tasks_by_pet_name(self, pet_name: str) -> List[Task]:
         """Return only the tasks for a specific pet that would be included in the schedule (considering time constraints)."""

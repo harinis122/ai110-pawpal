@@ -1,9 +1,3 @@
-# input available hours
-# input due time for each task
-# filter by pet name
-# error message if schedule exceeds available hours, then optimize by priority and due time to fit available hours
-
-
 import streamlit as st
 from datetime import datetime
 from pawpal_system import Owner, Pet, Task, Scheduler
@@ -47,13 +41,18 @@ At minimum, your system should:
 st.divider()
 
 st.subheader("Quick Demo Inputs (UI only)")
-owner_name = st.text_input("Owner name", value="Jordan")
+owner_name = st.text_input("Owner name", value="Alice")
+available_hours = st.number_input("Available hours per day", min_value=0, max_value=24, value=4)
 pet_name = st.text_input("Pet name", value="Mochi")
 species = st.selectbox("Species", ["dog", "cat", "other"])
 
 # Persist owner/pet/task model in Streamlit session state
 if "owner" not in st.session_state:
-    st.session_state.owner = Owner(name=owner_name, pets=[], available_hours=4)
+    st.session_state.owner = Owner(name=owner_name, pets=[], available_hours=available_hours)
+
+# Keep consistent owner data across reruns
+st.session_state.owner.name = owner_name
+st.session_state.owner.available_hours = available_hours
 
 # Keep consistent owner name as input updates (optional update behavior)
 if st.session_state.owner.name != owner_name:
@@ -73,9 +72,18 @@ with col2:
 with col3:
     priority = st.selectbox("Priority", ["low", "medium", "high"], index=2)
 
+due_time_text = st.text_input("Task due time (YYYY-MM-DD HH:MM)", value=datetime.now().strftime("%Y-%m-%d %H:%M"))
+
 if st.button("Add task"):
+    # Persist task entry for table display
     st.session_state.tasks.append(
-        {"title": task_title, "duration_minutes": int(duration), "priority": priority}
+        {
+            "title": task_title,
+            "duration_minutes": int(duration),
+            "priority": priority,
+            "due_time": due_time_text,
+            "pet_name": pet_name,
+        }
     )
 
     # Ensure current pet exists in Owner object and persist in session
@@ -85,21 +93,33 @@ if st.button("Add task"):
         current_pet = Pet(breed=species, name=pet_name, tasks=[])
         owner.pets.append(current_pet)
 
+    # Parse due time safely
+    try:
+        parsed_due_time = datetime.strptime(due_time_text, "%Y-%m-%d %H:%M")
+    except ValueError:
+        st.warning("Unable to parse due time; using current time instead.")
+        parsed_due_time = datetime.now()
+
     priority_map = {"high": 1, "medium": 2, "low": 3}
     task_obj = Task(
         description=task_title,
         duration=int(duration),
-        due_time=datetime.now(),
+        due_time=parsed_due_time,
         priority=priority_map.get(priority, 3),
     )
     current_pet.add_task(task_obj)
     st.session_state.owner = owner
+    st.success("Task added")
 
 if st.session_state.tasks:
     st.write("Current tasks:")
     st.table(st.session_state.tasks)
 else:
     st.info("No tasks yet. Add one above.")
+
+# Filter tasks by pet name
+pet_names = [pet.name for pet in st.session_state.owner.pets]
+pet_filter = st.selectbox("Filter schedule by pet", options=["all"] + pet_names)
 
 st.divider()
 
@@ -114,10 +134,23 @@ if st.button("Generate schedule"):
         scheduler = Scheduler(all_tasks=owner.get_all_tasks(), owner=owner)
         schedule = scheduler.get_schedule()
 
+        # Apply pet filter if selected
+        if pet_filter != "all":
+            schedule = [task for task in schedule if next((p.name for p in owner.pets if task in p.tasks), "unknown") == pet_filter]
+
+        # Display warning about schedule capacity (same wording as main.py)
+        if not scheduler.all_tasks_can_be_completed():
+            st.warning("Note: All tasks cannot be completed within available hours. Schedule has been optimized by priority and due time to fit available hours:")
+
+        # Display warning about conflicting due times (same wording as main.py)
+        due_times = [task.due_time for task in schedule]
+        if len(due_times) != len(set(due_times)):
+            st.warning("Note: Multiple tasks have the same due time and have been optimized by priority level.")
+
         st.success("Schedule generated from current Owner state")
         for task in schedule:
             st.write(
-                f"{task.due_time.strftime('%I:%M %p')} - {task.description} | priority: {task.priority} | pet: "
+                f"{task.due_time.strftime('%Y-%m-%d %I:%M %p')} - {task.description} | priority: {task.priority} | pet: "
                 f"{next((p.name for p in owner.pets if task in p.tasks), 'unknown')}"
             )
 
